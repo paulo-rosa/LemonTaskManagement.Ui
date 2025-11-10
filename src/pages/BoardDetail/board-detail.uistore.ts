@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-import { boardStore } from '../../stores';
+import { boardStore, cardStore, authStore } from '../../stores';
 
 export class BoardDetailPageUIStore {
   userId: string;
@@ -11,37 +11,79 @@ export class BoardDetailPageUIStore {
     makeAutoObservable(this, {}, { autoBind: true });
   }
 
-  /**
-   * Initialize the page
-   */
   async init(): Promise<void> {
     await this.loadBoard();
   }
 
-  /**
-   * Load board details
-   */
   async loadBoard(): Promise<void> {
     await boardStore.loadBoard(this.userId, this.boardId);
   }
 
-  /**
-   * Get whether loading
-   */
+  async createCard(columnId: string, description: string): Promise<boolean> {
+    const assignedUserId = authStore.currentUser?.userId;
+
+    const card = await cardStore.createCard(
+      this.userId,
+      this.boardId,
+      columnId,
+      description,
+      assignedUserId
+    );
+
+    if (card) {
+      await this.loadBoard();
+      return true;
+    }
+
+    return false;
+  }
+
+  async updateCard(cardId: string, description: string, assignedUserId?: string): Promise<boolean> {
+    const card = await cardStore.updateCard(
+      this.userId,
+      this.boardId,
+      cardId,
+      description,
+      assignedUserId
+    );
+
+    if (card) {
+      await this.loadBoard();
+      return true;
+    }
+
+    return false;
+  }
+
+  async moveCard(
+    cardId: string,
+    targetColumnId: string,
+    targetOrder: number
+  ): Promise<boolean> {
+    const card = await cardStore.moveCard(
+      this.userId,
+      this.boardId,
+      cardId,
+      targetColumnId,
+      targetOrder
+    );
+
+    if (card) {
+      await this.loadBoard();
+      return true;
+    }
+
+    return false;
+  }
+
   get isLoading(): boolean {
-    return boardStore.loading;
+    return boardStore.loading || cardStore.loading;
   }
 
-  /**
-   * Get error
-   */
   get error(): string | null {
-    return boardStore.error;
+    return boardStore.error || cardStore.error;
   }
 
-  /**
-   * Get selected board
-   */
   get board() {
     return boardStore.selectedBoard;
   }

@@ -5,13 +5,6 @@
 
   &__header {
     margin-bottom: $spacing-lg;
-    display: flex;
-    align-items: center;
-    gap: $spacing-md;
-  }
-
-  &__back-button {
-    min-width: auto !important;
   }
 
   &__title {

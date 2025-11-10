@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Typography,
@@ -10,27 +10,22 @@ import {
   CardContent,
   CardActionArea,
   Box,
-  IconButton,
 } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { authStore } from '../../stores';
 import { BoardsPageUIStore } from './boards.uistore';
 import './boards.page.scss';
 
 const BoardsPage = observer(() => {
   const navigate = useNavigate();
-  const { userId } = useParams<{ userId: string }>();
-  const [uiStore] = useState(() => new BoardsPageUIStore(userId || ''));
+  const userId = authStore.currentUser?.userId || '';
+  const [uiStore] = useState(() => new BoardsPageUIStore(userId));
 
   useEffect(() => {
     uiStore.init();
   }, [uiStore]);
 
   const handleBoardClick = (boardId: string) => {
-    navigate(`/users/${userId}/boards/${boardId}`);
-  };
-
-  const handleBackClick = () => {
-    navigate('/users');
+    navigate(`/boards/${boardId}`);
   };
 
   if (uiStore.isLoading && uiStore.boards.length === 0) {
@@ -46,15 +41,8 @@ const BoardsPage = observer(() => {
   return (
     <Container maxWidth="lg" className="boards-page">
       <div className="boards-page__header">
-        <IconButton
-          onClick={handleBackClick}
-          className="boards-page__back-button"
-          aria-label="back to users"
-        >
-          <ArrowBackIcon />
-        </IconButton>
         <Typography variant="h4" className="boards-page__title">
-          Boards for User
+          My Boards
         </Typography>
       </div>
 
@@ -68,7 +56,7 @@ const BoardsPage = observer(() => {
         <Card>
           <CardContent>
             <Typography className="boards-page__empty">
-              No boards found for this user
+              No boards found
             </Typography>
           </CardContent>
         </Card>

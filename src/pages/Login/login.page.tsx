@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Card,
@@ -17,11 +17,8 @@ import './login.page.scss';
 
 const LoginPage = observer(() => {
   const navigate = useNavigate();
-  const location = useLocation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
-  const from = location.state?.from?.pathname || '/users';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +30,7 @@ const LoginPage = observer(() => {
     const success = await authStore.login(username, password);
 
     if (success) {
-      navigate(from, { replace: true });
+      navigate('/boards', { replace: true });
     }
   };
 

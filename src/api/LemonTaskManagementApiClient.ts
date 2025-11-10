@@ -16,6 +16,7 @@ export interface ILemonTaskManagementApiClient {
     userBoards_GetUserBoards(userIdPath: string, userIdQuery: string | undefined, skip: number | undefined, take: number | undefined): Promise<ApiResponseOfGetUserBoardsResponse>;
     userBoards_GetUserBoard(userId: string, boardId: string): Promise<ApiResponseOfGetUserBoardResponse>;
     userBoards_CreateCard(userId: string, boardId: string, command: CreateCardCommand): Promise<ApiResponseOfCreateCardResponse>;
+    userBoards_UpdateCard(userId: string, boardId: string, cardId: string, command: UpdateCardCommand): Promise<ApiResponseOfUpdateCardResponse>;
     userBoards_MoveCard(userId: string, boardId: string, cardId: string, command: MoveCardCommand): Promise<ApiResponseOfMoveCardResponse>;
     users_GetUser(id: string): Promise<ApiResponseOfGetUserResponse>;
     users_GetUsers(nameContains: string | null | undefined, emailContains: string | null | undefined, skip: number | undefined, take: number | undefined): Promise<ApiResponseOfGetUsersResponse>;
@@ -75,21 +76,21 @@ export class LemonTaskManagementApiClient implements ILemonTaskManagementApiClie
         if (status === 200) {
             const _responseText = response.data;
             let result200: any = null;
-            let resultData200  = _responseText;
+            let resultData200 = _responseText;
             result200 = ApiResponseOfLoginResponse.fromJS(resultData200);
             return Promise.resolve<ApiResponseOfLoginResponse>(result200);
 
         } else if (status === 400) {
             const _responseText = response.data;
             let result400: any = null;
-            let resultData400  = _responseText;
+            let resultData400 = _responseText;
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
 
         } else if (status === 401) {
             const _responseText = response.data;
             let result401: any = null;
-            let resultData401  = _responseText;
+            let resultData401 = _responseText;
             result401 = ProblemDetails.fromJS(resultData401);
             return throwException("A server side error occurred.", status, _responseText, _headers, result401);
 
@@ -152,7 +153,7 @@ export class LemonTaskManagementApiClient implements ILemonTaskManagementApiClie
         if (status === 200) {
             const _responseText = response.data;
             let result200: any = null;
-            let resultData200  = _responseText;
+            let resultData200 = _responseText;
             result200 = ApiResponseOfGetUserBoardsResponse.fromJS(resultData200);
             return Promise.resolve<ApiResponseOfGetUserBoardsResponse>(result200);
 
@@ -206,7 +207,7 @@ export class LemonTaskManagementApiClient implements ILemonTaskManagementApiClie
         if (status === 200) {
             const _responseText = response.data;
             let result200: any = null;
-            let resultData200  = _responseText;
+            let resultData200 = _responseText;
             result200 = ApiResponseOfGetUserBoardResponse.fromJS(resultData200);
             return Promise.resolve<ApiResponseOfGetUserBoardResponse>(result200);
 
@@ -264,14 +265,14 @@ export class LemonTaskManagementApiClient implements ILemonTaskManagementApiClie
         if (status === 201) {
             const _responseText = response.data;
             let result201: any = null;
-            let resultData201  = _responseText;
+            let resultData201 = _responseText;
             result201 = ApiResponseOfCreateCardResponse.fromJS(resultData201);
             return Promise.resolve<ApiResponseOfCreateCardResponse>(result201);
 
         } else if (status === 400) {
             const _responseText = response.data;
             let result400: any = null;
-            let resultData400  = _responseText;
+            let resultData400 = _responseText;
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
 
@@ -280,6 +281,81 @@ export class LemonTaskManagementApiClient implements ILemonTaskManagementApiClie
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<ApiResponseOfCreateCardResponse>(null as any);
+    }
+
+    userBoards_UpdateCard(userId: string, boardId: string, cardId: string, command: UpdateCardCommand, cancelToken?: CancelToken): Promise<ApiResponseOfUpdateCardResponse> {
+        let url_ = this.baseUrl + "/api/users/{userId}/boards/{boardId}/cards/{cardId}";
+        if (userId === undefined || userId === null)
+            throw new Error("The parameter 'userId' must be defined.");
+        url_ = url_.replace("{userId}", encodeURIComponent("" + userId));
+        if (boardId === undefined || boardId === null)
+            throw new Error("The parameter 'boardId' must be defined.");
+        url_ = url_.replace("{boardId}", encodeURIComponent("" + boardId));
+        if (cardId === undefined || cardId === null)
+            throw new Error("The parameter 'cardId' must be defined.");
+        url_ = url_.replace("{cardId}", encodeURIComponent("" + cardId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "PUT",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processUserBoards_UpdateCard(_response);
+        });
+    }
+
+    protected processUserBoards_UpdateCard(response: AxiosResponse): Promise<ApiResponseOfUpdateCardResponse> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (const k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200 = _responseText;
+            result200 = ApiResponseOfUpdateCardResponse.fromJS(resultData200);
+            return Promise.resolve<ApiResponseOfUpdateCardResponse>(result200);
+
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400 = _responseText;
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+
+        } else if (status === 404) {
+            const _responseText = response.data;
+            let result404: any = null;
+            let resultData404 = _responseText;
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ApiResponseOfUpdateCardResponse>(null as any);
     }
 
     userBoards_MoveCard(userId: string, boardId: string, cardId: string, command: MoveCardCommand, cancelToken?: CancelToken): Promise<ApiResponseOfMoveCardResponse> {
@@ -332,14 +408,14 @@ export class LemonTaskManagementApiClient implements ILemonTaskManagementApiClie
         if (status === 200) {
             const _responseText = response.data;
             let result200: any = null;
-            let resultData200  = _responseText;
+            let resultData200 = _responseText;
             result200 = ApiResponseOfMoveCardResponse.fromJS(resultData200);
             return Promise.resolve<ApiResponseOfMoveCardResponse>(result200);
 
         } else if (status === 400) {
             const _responseText = response.data;
             let result400: any = null;
-            let resultData400  = _responseText;
+            let resultData400 = _responseText;
             result400 = ProblemDetails.fromJS(resultData400);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
 
@@ -390,7 +466,7 @@ export class LemonTaskManagementApiClient implements ILemonTaskManagementApiClie
         if (status === 200) {
             const _responseText = response.data;
             let result200: any = null;
-            let resultData200  = _responseText;
+            let resultData200 = _responseText;
             result200 = ApiResponseOfGetUserResponse.fromJS(resultData200);
             return Promise.resolve<ApiResponseOfGetUserResponse>(result200);
 
@@ -450,7 +526,7 @@ export class LemonTaskManagementApiClient implements ILemonTaskManagementApiClie
         if (status === 200) {
             const _responseText = response.data;
             let result200: any = null;
-            let resultData200  = _responseText;
+            let resultData200 = _responseText;
             result200 = ApiResponseOfGetUsersResponse.fromJS(resultData200);
             return Promise.resolve<ApiResponseOfGetUsersResponse>(result200);
 
@@ -1165,7 +1241,7 @@ export class BoardColumnDto implements IBoardColumnDto {
     name?: string | undefined;
     order?: number;
     createdAt?: Date;
-    updatedAt?: Date;
+    updatedAt?: Date | undefined;
     cards?: CardDto[] | undefined;
 
     constructor(data?: IBoardColumnDto) {
@@ -1223,7 +1299,7 @@ export interface IBoardColumnDto {
     name?: string | undefined;
     order?: number;
     createdAt?: Date;
-    updatedAt?: Date;
+    updatedAt?: Date | undefined;
     cards?: CardDto[] | undefined;
 }
 
@@ -1235,7 +1311,7 @@ export class CardDto implements ICardDto {
     assignedUserId?: string | undefined;
     assignedUser?: UserDto | undefined;
     createdAt?: Date;
-    updatedAt?: Date;
+    updatedAt?: Date | undefined;
 
     constructor(data?: ICardDto) {
         if (data) {
@@ -1288,7 +1364,7 @@ export interface ICardDto {
     assignedUserId?: string | undefined;
     assignedUser?: UserDto | undefined;
     createdAt?: Date;
-    updatedAt?: Date;
+    updatedAt?: Date | undefined;
 }
 
 export class ApiResponseOfGetUserBoardResponse implements IApiResponseOfGetUserBoardResponse {
@@ -1607,6 +1683,191 @@ export interface ICreateCardCommand {
     userId?: string;
     boardId?: string;
     boardColumnId?: string;
+    description?: string | undefined;
+    assignedUserId?: string | undefined;
+}
+
+export class ApiResponseOfUpdateCardResponse implements IApiResponseOfUpdateCardResponse {
+    statusCode?: number;
+    message?: string;
+    exception?: ApiError;
+    result?: UpdateCardResponse | undefined;
+
+    constructor(data?: IApiResponseOfUpdateCardResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.statusCode = _data["statusCode"];
+            this.message = _data["message"];
+            this.exception = _data["exception"] ? ApiError.fromJS(_data["exception"]) : <any>undefined;
+            this.result = _data["result"] ? UpdateCardResponse.fromJS(_data["result"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ApiResponseOfUpdateCardResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApiResponseOfUpdateCardResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["statusCode"] = this.statusCode;
+        data["message"] = this.message;
+        data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
+        data["result"] = this.result ? this.result.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IApiResponseOfUpdateCardResponse {
+    statusCode?: number;
+    message?: string;
+    exception?: ApiError;
+    result?: UpdateCardResponse | undefined;
+}
+
+export class UpdateCardResponse extends Response implements IUpdateCardResponse {
+    data?: UpdateCardDto | undefined;
+
+    constructor(data?: IUpdateCardResponse) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.data = _data["data"] ? UpdateCardDto.fromJS(_data["data"]) : <any>undefined;
+        }
+    }
+
+    static override fromJS(data: any): UpdateCardResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateCardResponse();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface IUpdateCardResponse extends IResponse {
+    data?: UpdateCardDto | undefined;
+}
+
+export class UpdateCardDto implements IUpdateCardDto {
+    id?: string;
+    boardColumnId?: string;
+    description?: string | undefined;
+    order?: number;
+    assignedUserId?: string | undefined;
+
+    constructor(data?: IUpdateCardDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.boardColumnId = _data["boardColumnId"];
+            this.description = _data["description"];
+            this.order = _data["order"];
+            this.assignedUserId = _data["assignedUserId"];
+        }
+    }
+
+    static fromJS(data: any): UpdateCardDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateCardDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["boardColumnId"] = this.boardColumnId;
+        data["description"] = this.description;
+        data["order"] = this.order;
+        data["assignedUserId"] = this.assignedUserId;
+        return data;
+    }
+}
+
+export interface IUpdateCardDto {
+    id?: string;
+    boardColumnId?: string;
+    description?: string | undefined;
+    order?: number;
+    assignedUserId?: string | undefined;
+}
+
+export class UpdateCardCommand implements IUpdateCardCommand {
+    userId?: string;
+    cardId?: string;
+    boardId?: string;
+    description?: string | undefined;
+    assignedUserId?: string | undefined;
+
+    constructor(data?: IUpdateCardCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userId = _data["userId"];
+            this.cardId = _data["cardId"];
+            this.boardId = _data["boardId"];
+            this.description = _data["description"];
+            this.assignedUserId = _data["assignedUserId"];
+        }
+    }
+
+    static fromJS(data: any): UpdateCardCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateCardCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userId"] = this.userId;
+        data["cardId"] = this.cardId;
+        data["boardId"] = this.boardId;
+        data["description"] = this.description;
+        data["assignedUserId"] = this.assignedUserId;
+        return data;
+    }
+}
+
+export interface IUpdateCardCommand {
+    userId?: string;
+    cardId?: string;
+    boardId?: string;
     description?: string | undefined;
     assignedUserId?: string | undefined;
 }
