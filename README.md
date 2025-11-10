@@ -1,221 +1,242 @@
-# LemonTaskManagement.UI
+# Lemon Task Management - Frontend
 
-A modern task management application built with React, TypeScript, and Material-UI.
+A Kanban-style task management application built with React and TypeScript. This frontend application connects to the .NET Core backend API to provide a complete task management solution.
 
 ## Tech Stack
 
-- **React 19** - UI library
-- **TypeScript** - Type-safe JavaScript
+- **React 19** with TypeScript - Modern UI with full type safety
+- **MobX 6** - Reactive state management
+- **Material-UI 7** - Component library and design system
 - **Vite** - Fast build tool and dev server
-- **Material-UI (MUI)** - Component library
-- **MobX** - State management
-- **Axios** - HTTP client
-- **SCSS** - Styling with variables and mixins
-- **Vitest** - Unit testing framework
-- **React Testing Library** - Component testing utilities
+- **Axios** - HTTP client with interceptors
+- **SCSS** - Modular styling with BEM methodology
+- **React Router 7** - Client-side routing
 
-## Prerequisites
+## Setup Instructions
 
-Before running this project, make sure you have the following installed:
+### Prerequisites
 
-- **Node.js** (v18 or higher)
-- **npm** (v9 or higher)
+- Node.js v18 or higher
+- npm v9 or higher
+- Backend API running on `http://localhost:5130`
 
-## Installation
+### Installation
 
-1. Navigate to the project directory:
-
-```bash
-cd d:\source\repos\Personal\TaskManagementApp\LemonTaskManagement.UI
-```
-
-2. Install dependencies:
-
+1. Install dependencies:
 ```bash
 npm install
 ```
 
-## Running the Application
-
-### Development Mode
-
-To run the application in development mode with hot module replacement:
-
+2. Start the development server:
 ```bash
 npm run dev
 ```
 
-The application will be available at `http://localhost:5173` (or another port if 5173 is in use).
+3. Access the application at `http://localhost:5173`
 
-The development environment will connect to the API at `http://localhost:5130`.
+### Default Credentials
 
-### Preview Production Build
+Use the following credentials to log in (configured in the backend):
+- Username: `john.doe`
+- Password: `Password123!`
+##
+- Username: `jane.smith`
+- Password: `Password123!`
+##
+- Username: `admin`
+- Password: `Admin123!`
 
-To preview the production build locally:
 
-```bash
-npm run preview
+## Frontend Architecture
+
+### Component Design
+
+The application follows a layered architecture pattern:
+
+```
+┌─────────────────────────────────────┐
+│         Pages (Views)                │
+│  - Login, Boards, BoardDetail        │
+└───────────────┬─────────────────────┘
+                │
+┌───────────────▼─────────────────────┐
+│         UI Stores                    │
+│  - Page-specific logic & state       │
+└───────────────┬─────────────────────┘
+                │
+┌───────────────▼─────────────────────┐
+│         Domain Stores                │
+│  - Business logic & API calls        │
+│  - auth, board, card                 │
+└───────────────┬─────────────────────┘
+                │
+┌───────────────▼─────────────────────┐
+│         API Client (NSwag)           │
+│  - Type-safe API communication       │
+└─────────────────────────────────────┘
 ```
 
-## Building for Deployment
+**Key Components:**
+- **ProtectedRoute**: Authentication guard for secured routes
+- **AddCardDialog / EditCardDialog**: Reusable dialogs for card operations
+- **Layout**: Application shell with header and navigation
 
-### Development Build
+### State Management
 
-```bash
-npm run build
-```
+MobX stores handle reactive state with clear separation of concerns:
 
-This creates an optimized production build in the `dist` folder using the development environment configuration.
+- **AuthStore**: Authentication state, login/logout, token management
+- **BoardStore**: Board listing and details
+- **CardStore**: Card CRUD operations (create, update, move)
+- **UserStore**: User data (currently minimal, prepared for future features)
 
-### Stage Build
+All stores extend `BaseStore` which provides common error handling and loading states.
 
-```bash
-npm run build:stage
-```
+### Communication with Backend
 
-This creates a build for the staging environment. The build will use the configuration from `.env.stage`.
+- **NSwag-generated client** provides fully typed API calls
+- **Axios interceptors** handle authentication tokens automatically
+- **Environment-based configuration** for different deployment targets
+- API base URL configured via `VITE_API_BASE_URL` environment variable
 
-**Note:** Currently points to `http://localhost:5130`. Update `.env.stage` with the actual staging API URL.
-
-### Production Build
-
-```bash
-npm run build:prod
-```
-
-This creates a build for the production environment. The build will use the configuration from `.env.production`.
-
-**Note:** Currently points to `http://localhost:5130`. Update `.env.production` with the actual production API URL.
-
-## Testing
-
-### Run Tests
-
-Run all tests in watch mode:
-
-```bash
-npm test
-```
-
-### Run Tests with UI
-
-Run tests with Vitest's interactive UI:
-
-```bash
-npm run test:ui
-```
-
-### Run Tests with Coverage
-
-Generate test coverage report:
-
-```bash
-npm run test:coverage
-```
-
-## Environment Configuration
-
-The application uses environment-specific configuration files:
-
-- `.env.development` - Development environment
-- `.env.stage` - Staging environment
-- `.env.production` - Production environment
-
-### Environment Variables
-
-Each environment file contains the following variables:
-
-- `VITE_API_BASE_URL` - The base URL for API requests
-- `VITE_APP_ENV` - The current environment name
-
-**Important:** Update the `VITE_API_BASE_URL` in `.env.stage` and `.env.production` with the actual API endpoints before deploying to those environments.
-
-## Project Structure
+### Project Structure
 
 ```
 src/
-├── components/          # React components
-│   ├── TaskItem/       # Individual task component
-│   └── TaskList/       # Task list container component
-├── services/           # API services
-│   └── api.service.ts  # Axios API client
-├── stores/             # MobX stores
-│   ├── task.store.ts   # Task state management
-│   └── index.ts        # Store context and hooks
-├── styles/             # Global styles
-│   ├── variables.scss  # SCSS variables
-│   └── global.scss     # Global styles
-├── test/               # Test configuration
-│   └── setup.ts        # Test setup file
-├── App.tsx             # Main application component
-├── main.tsx            # Application entry point
-└── vite-env.d.ts       # TypeScript declarations for Vite
+├── api/                    # NSwag-generated API client
+├── components/             # Reusable components
+│   ├── AddCardDialog.tsx
+│   ├── EditCardDialog.tsx
+│   └── ProtectedRoute.tsx
+├── pages/                  # Route-based views
+│   ├── Login/             # Authentication
+│   ├── Boards/            # Board listing
+│   └── BoardDetail/       # Kanban board with drag-and-drop
+├── stores/                 # MobX state management
+│   ├── auth.store.ts
+│   ├── board.store.ts
+│   ├── card.store.ts
+│   └── base.store.ts
+├── layout/                 # App shell with header/logout
+├── router/                 # React Router configuration
+└── styles/                 # Global SCSS variables
 ```
 
-## Styling
+## Features Implemented (Production MVP)
 
-The project uses SCSS for styling with:
+### Core Functionality
+- **User Authentication** - JWT-based login with token storage
+- **Board Management** - View all boards for logged-in user
+- **Kanban Board View** - Visual board with columns and cards
+- **Card CRUD Operations** - Create, read, update cards
+- **Drag & Drop** - Move cards between columns and reorder within columns
+- **Auto-assignment** - Cards automatically assigned to creator
+- **Logout** - Clear session and return to login
 
-- Global SCSS variables defined in `src/styles/variables.scss`
-- Component-specific SCSS modules
-- Material-UI theme customization
+### UI/UX Features
+- Responsive Material Design interface
+- Loading states and error handling
+- Visual feedback during drag operations
+- User-friendly dialogs for card operations
+- Current user display in header
 
-## Available Scripts
+## Assumptions & Trade-offs
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production (development config)
-- `npm run build:stage` - Build for staging environment
-- `npm run build:prod` - Build for production environment
-- `npm run lint` - Run ESLint
-- `npm run preview` - Preview production build
-- `npm test` - Run tests in watch mode
-- `npm run test:ui` - Run tests with interactive UI
-- `npm run test:coverage` - Generate test coverage report
+### Assumptions
+1. **Single tenant per session** - Users only see their own boards and cards
+2. **Auto-assignment** - New cards automatically assigned to creator (no manual user selection)
+3. **Order-based positioning** - Cards use 1-based numeric ordering for position
+4. **In-memory sessions** - Tokens stored in localStorage (acceptable for MVP)
 
-## Development Tips
+### Trade-offs
 
-### Adding New Components
+**Chosen: NSwag client generation**
+- Pros: Full type safety, auto-sync with backend, compile-time errors
+- Cons: Requires regeneration when API changes, larger bundle size
+- Alternative: Manual Axios calls would be more flexible but lose type safety
 
-1. Create a new folder in `src/components/`
-2. Add the component TypeScript file (e.g., `MyComponent.tsx`)
-3. Add the component SCSS file (e.g., `MyComponent.scss`)
-4. Create tests (e.g., `MyComponent.test.tsx`)
+**Chosen: MobX over Redux**
+- Pros: Less boilerplate, more intuitive for simple flows, better performance
+- Cons: Less ecosystem tooling, potential for uncontrolled mutations
+- Alternative: Redux would provide better time-travel debugging
 
-### Working with MobX Stores
+**Chosen: HTML5 Drag & Drop API**
+- Pros: Native browser support, no additional dependencies
+- Cons: Limited mobile support, more complex event handling
+- Alternative: React DnD or react-beautiful-dnd would have better mobile support but add bundle size
 
-1. Create store files in `src/stores/`
-2. Use `makeAutoObservable` for reactive state
-3. Access stores using the `useStore` hook in components
-4. Wrap components with `observer` from `mobx-react-lite`
+**Chosen: localStorage for tokens**
+- Pros: Simple, persists across sessions, widely supported
+- Cons: Vulnerable to XSS attacks
+- Alternative: httpOnly cookies would be more secure but require backend changes
 
-### Making API Calls
+## Future Enhancements
 
-Use the `apiService` from `src/services/api.service.ts`:
+### Short-term (Next Sprint)
+- [ ] **Real-time updates** - WebSocket integration for collaborative editing
+- [ ] **Card details modal** - Rich text descriptions, due dates, attachments
+- [ ] **User assignment UI** - Ability to reassign cards to other users
+- [ ] **Board/Column CRUD** - Create, edit, delete boards and columns
+- [ ] **Search & Filter** - Filter cards by assignee, date, status
 
-```typescript
-import { apiService } from '../services/api.service';
+### Medium-term (Next Quarter)
+- [ ] **Mobile optimization** - Touch-friendly drag & drop
+- [ ] **Activity log** - Audit trail of card movements and changes
+- [ ] **Comments** - Discussion threads on cards
+- [ ] **Labels/Tags** - Categorize cards with colored labels
+- [ ] **Dark mode** - Theme switcher
 
-// GET request
-const data = await apiService.get<ResponseType>('/endpoint');
+### Long-term (Roadmap)
+- [ ] **Notifications** - In-app and email notifications
+- [ ] **Advanced permissions** - Role-based access control
+- [ ] **Analytics dashboard** - Burndown charts, velocity metrics
+- [ ] **Templates** - Pre-configured board templates
+- [ ] **API rate limiting UI** - Handle backend throttling gracefully
+- [ ] **Offline mode** - Service worker for offline functionality
 
-// POST request
-const result = await apiService.post<ResponseType>('/endpoint', payload);
+## Scalability Considerations
+
+### Current Limitations
+- **No pagination** - Loads all boards/cards at once (fine for MVP, not for thousands of items)
+- **No optimistic updates** - Waits for server response before updating UI
+- **localStorage size limits** - Token storage constrained by browser limits (~5-10MB)
+
+### Scaling Strategy
+1. **Add pagination/infinite scroll** - Lazy load boards and cards
+2. **Optimize re-renders** - Use React.memo and useMemo for expensive components
+3. **Code splitting** - Route-based splitting to reduce initial bundle
+4. **CDN deployment** - Serve static assets from edge locations
+5. **Service worker caching** - Cache API responses for faster subsequent loads
+
+## Build & Deployment
+
+```bash
+# Development
+npm run dev
+
+# Production build
+npm run build
+
+# Preview production build
+npm run preview
 ```
 
-## Important Notes
+Environment variables (`.env.*` files):
+- `VITE_API_BASE_URL` - Backend API URL (default: `http://localhost:5130`)
+- `VITE_APP_ENV` - Environment name
 
-- **TODO:** Update API URLs in `.env.stage` and `.env.production` before deploying to those environments
-- The development environment connects to `http://localhost:5130` by default
-- Make sure the backend API is running when testing the application
-- All environment variables must be prefixed with `VITE_` to be accessible in the application
+## Testing
 
-## Deployment
+```bash
+# Run tests
+npm test
 
-After building for the target environment, deploy the contents of the `dist` folder to your web server or hosting platform.
+# Coverage report
+npm run test:coverage
+```
 
-Popular deployment options:
-- Vercel
-- Netlify
-- AWS S3 + CloudFront
-- Azure Static Web Apps
-- GitHub Pages
+**Note:** Test coverage is minimal in this MVP. Production-ready app would require:
+- Unit tests for all stores
+- Component tests for all UI components
+- Integration tests for critical user flows
+- E2E tests with Playwright/Cypress
