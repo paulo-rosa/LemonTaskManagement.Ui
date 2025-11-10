@@ -1,0 +1,51 @@
+@use '../../styles/variables' as *;
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+  &__content {
+    width: 100%;
+    padding: $spacing-lg;
+  }
+
+  &__card {
+    padding: $spacing-xl;
+  }
+
+  &__title {
+    text-align: center;
+    color: $primary-color;
+    font-weight: 600;
+    margin-bottom: $spacing-sm;
+  }
+
+  &__subtitle {
+    text-align: center;
+    margin-bottom: $spacing-lg;
+  }
+
+  &__error {
+    margin-bottom: $spacing-md;
+  }
+
+  &__form {
+    margin-top: $spacing-md;
+    margin-bottom: $spacing-md;
+  }
+
+  &__submit {
+    margin-top: $spacing-lg !important;
+    padding: $spacing-md !important;
+    font-weight: 600 !important;
+  }
+
+  &__hint {
+    display: block;
+    text-align: center;
+    margin-top: $spacing-md;
+  }
+}

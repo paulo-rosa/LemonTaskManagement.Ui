@@ -1,13 +1,13 @@
 import { createContext, useContext } from 'react';
 import { userStore } from './user.store';
 import { boardStore } from './board.store';
-import { taskStore } from './task.store';
+import { authStore } from './auth.store';
 
 // Root store containing all domain stores
 class RootStore {
   userStore = userStore;
   boardStore = boardStore;
-  taskStore = taskStore; // Kept for backwards compatibility with existing tests
+  authStore = authStore;
 
   /**
    * Reset all stores
@@ -15,7 +15,7 @@ class RootStore {
   reset(): void {
     this.userStore.reset();
     this.boardStore.reset();
-    this.taskStore.reset();
+    this.authStore.reset();
   }
 }
 
@@ -35,4 +35,4 @@ export const useStore = () => {
 export { StoreContext, rootStore };
 export { userStore } from './user.store';
 export { boardStore } from './board.store';
-export { taskStore } from './task.store';
+export { authStore } from './auth.store';
