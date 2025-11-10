@@ -1,0 +1,48 @@
+@use '../../styles/variables.scss' as *;
+
+.task-list {
+  padding: $spacing-md;
+  
+  &__header {
+    margin-bottom: $spacing-lg;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__title {
+    font-size: $font-size-xl;
+    font-weight: 500;
+    color: $primary-color;
+  }
+
+  &__count {
+    color: #666;
+    font-size: $font-size-md;
+  }
+
+  &__loading {
+    text-align: center;
+    padding: $spacing-xl;
+  }
+
+  &__error {
+    color: $error-color;
+    padding: $spacing-md;
+    background-color: #ffebee;
+    border-radius: 4px;
+    margin-bottom: $spacing-md;
+  }
+
+  &__empty {
+    text-align: center;
+    padding: $spacing-xl;
+    color: #999;
+  }
+
+  &__items {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+}

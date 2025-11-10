@@ -1,0 +1,25 @@
+@use '../styles/variables' as *;
+
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  &__header {
+    background-color: $primary-color;
+    color: white;
+    padding: $spacing-md $spacing-lg;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &__title {
+    color: white !important;
+    font-weight: 500;
+  }
+
+  &__main {
+    flex: 1;
+    padding: $spacing-lg 0;
+    background-color: #f9f9f9;
+  }
+}

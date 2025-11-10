@@ -1,0 +1,45 @@
+@use '../../styles/variables' as *;
+
+.users-page {
+  padding: $spacing-lg;
+
+  &__header {
+    margin-bottom: $spacing-lg;
+  }
+
+  &__title {
+    font-size: $font-size-xl;
+    font-weight: 500;
+    color: $primary-color;
+    margin-bottom: $spacing-md;
+  }
+
+  &__search {
+    margin-bottom: $spacing-lg;
+  }
+
+  &__loading {
+    text-align: center;
+    padding: $spacing-xl;
+  }
+
+  &__error {
+    color: $error-color;
+    padding: $spacing-md;
+    background-color: #ffebee;
+    border-radius: 4px;
+    margin-bottom: $spacing-md;
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: $spacing-md;
+  }
+
+  &__empty {
+    text-align: center;
+    padding: $spacing-xl;
+    color: #999;
+  }
+}
