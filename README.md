@@ -212,7 +212,7 @@ src/
 
 ```bash
 # Development
-npm run dev
+npm run start
 
 # Production build
 npm run build
