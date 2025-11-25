@@ -87,10 +87,6 @@ const LoginPage = observer(() => {
                 {authStore.loading ? <CircularProgress size={24} /> : 'Sign In'}
               </Button>
             </form>
-
-            <Typography variant="caption" color="text.secondary" className="login-page__hint">
-              Hint: Try admin / admin123
-            </Typography>
           </CardContent>
         </Card>
       </Box>
