@@ -29,7 +29,7 @@ npm install
 
 2. Start the development server:
 ```bash
-npm run dev
+npm run start
 ```
 
 3. Access the application at `http://localhost:5173`
